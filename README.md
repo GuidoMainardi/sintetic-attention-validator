@@ -17,6 +17,8 @@ People that watched the video get more answers right
 People that played the demo were less sure when answering the questions
 ![ANOVA dont know](DontKnow.png)
 
+Anwers distribution
+![graph](Answers.png)
 
 # Q3
 
