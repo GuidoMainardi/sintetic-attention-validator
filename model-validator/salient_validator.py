@@ -61,6 +61,8 @@ class SalientValidator:
         start = max(0, frame_count - window_frames//2)
         end = min(len(self.heatmap_record), frame_count + window_frames//2+1)
         
+        height, width, _ = screen_f.shape
+
         dets = [self.__get_heatmap_center(screen_f, h_frame) for h_frame in self.heatmap_record[start:end]]
         if all(det is None for det in dets):
             return -1, None
@@ -80,10 +82,12 @@ class SalientValidator:
         
         dists = []
 
+
         for frame_count, frames in enumerate(zip(self.screen_record, self.salience_record)):
             screen_f, sal_f = frames
 
             attention_points = self.__get_brighter_pixel(sal_f)
+
             dist, _ = self.__is_eye_close(screen_f, frame_count, attention_points)
             if dist > 0:
                 dists.append(dist)

@@ -6,6 +6,10 @@
 
 - the RMSE comparing the salience model with the demo samples is 330-ish
 
+- the RMSE comparing the screen central point with the demo saples is 500-ish
+
+
+- the RMSE comparing the screen central point with the video saples is 590-ish
 
 # Q2
 
