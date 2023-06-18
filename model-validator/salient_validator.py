@@ -38,7 +38,7 @@ class SalientValidator:
     def __get_heatmap_center(self, screen: np.array, heatmap: np.array) -> tuple:
 
         dif = cv.absdiff(cv.cvtColor(screen, cv.COLOR_BGR2GRAY),
-                         cv.cvtColor(heatmap, cv.COLOR_BGR2GRAY))
+                        cv.cvtColor(heatmap, cv.COLOR_BGR2GRAY))
 
         _, bi = cv.threshold(dif,30,255,0)
 
@@ -75,9 +75,6 @@ class SalientValidator:
                     min_dist = dist
                     close_point = det
         return min_dist, close_point
-
-    def __mrse(self, dists: list):
-        return math.sqrt(sum(map(lambda x: x**2, dists)) / len(dists))
     
     def validate_salience(self):
         
@@ -91,7 +88,8 @@ class SalientValidator:
             if dist > 0:
                 dists.append(dist)
 
-        return self.__mrse(dists)
+
+        return dists
 
             
     def create_visualization(self):

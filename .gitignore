@@ -10,3 +10,6 @@ __pycache__/
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
+
+# data files
+data/*
