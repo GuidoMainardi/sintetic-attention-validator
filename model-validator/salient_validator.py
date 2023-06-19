@@ -1,8 +1,9 @@
 from heatmap_extractor import HeatmapCenterExtractor
+from contour_avg_ploter import PlotContourAvg
 
 import cv2 as cv
 import numpy as np
-import math
+
 
 class SalientValidator:
 
@@ -18,6 +19,7 @@ class SalientValidator:
         self.salience_record = [cv.imread(img, cv.IMREAD_GRAYSCALE) for img in sorted(salience)]
         print('Frames loaded')
         self.heatmap_extractor = HeatmapCenterExtractor()
+        self.countour_ploter = PlotContourAvg()
 
     def __get_brighter_pixel(self, frame: np.array) -> tuple:
         '''
@@ -123,18 +125,19 @@ class SalientValidator:
     def create_sal_visualization(self):
 
         height, width, _ = self.screen_record[0].shape
-        video = cv.VideoWriter('output.mp4', cv.VideoWriter_fourcc(*'mp4v'), 10, (width,height))
+        video = cv.VideoWriter('output.mp4', cv.VideoWriter_fourcc(*'mp4v'), 5, (width,height))
 
         for screen_f, sal_f in zip(self.screen_record, self.salience_record):
 
             video_frame = self.__merge_frames(screen_f, sal_f)
             
-            attention_points = self.__get_brighter_pixel(sal_f)
+            #attention_points = self.__get_brighter_pixel(sal_f)
 
-            for point in attention_points:
-                cv.circle(video_frame, point[::-1], 5, (255,0,0), -1)
+            #for point in attention_points:
+                #cv.circle(video_frame, point[::-1], 5, (255,0,0), -1)
+
+            self.countour_ploter.draw_avg_values(sal_f, video_frame)
 
             video.write(video_frame)
 
         video.release()
-        
