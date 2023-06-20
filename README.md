@@ -4,13 +4,13 @@
 
 ## How is the salience model compared with the human eye track data
 
-- the RMSE comparing the salience model with the demo samples is 330-ish
+- RMSE active closer attention centre 184.79
+- RMSE active closer brighter pixel 356.58
+- RMSE active screen center 500-ish
 
-- the RMSE comparing the screen central point with the demo saples is 500-ish
-
-- the RMSE comparing the salience model with the video samples is 450-ish
-
-- the RMSE comparing the screen central point with the video saples is 590-ish
+- RMSE Passive closer attention center 196.56
+- RMSE Passive closer brighter pixel 455.13
+- RMSE Passive screen center 590-ish
 
 # Q2
 
