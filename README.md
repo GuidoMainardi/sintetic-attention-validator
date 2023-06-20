@@ -6,11 +6,11 @@
 
 - RMSE active closer attention centre 184.79
 - RMSE active closer brighter pixel 356.58
-- RMSE active screen center 500-ish
+- RMSE active screen center 272.91
 
 - RMSE Passive closer attention center 196.56
 - RMSE Passive closer brighter pixel 455.13
-- RMSE Passive screen center 590-ish
+- RMSE Passive screen center 438.20
 
 # Q2
 
