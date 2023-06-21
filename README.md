@@ -17,13 +17,13 @@
 ## Wich group had the best results?
 
 People that watched the video get more answers right
-![ANOVA Right Answers](RightAns.png)
+![ANOVA Right Answers](images/RightAns.png)
 
 People that played the demo were less sure when answering the questions
-![ANOVA dont know](DontKnow.png)
+![ANOVA dont know](images/DontKnow.png)
 
 Anwers distribution
-![graph](Answers.png)
+![graph](images/Answers.png)
 
 # Q3
 

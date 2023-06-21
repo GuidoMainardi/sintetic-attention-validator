@@ -36,6 +36,31 @@ class SalientValidator:
         values = np.where(frame == frame[brighter_pixel])
         return list(zip(values[0], values[1]))
 
+    def __get_contours(self, frame: np.array) -> list:
+        '''
+        Returns a list of contours in the frame
+
+        Parameters:
+            frame (np.array): binary image to be processed
+
+        Returns:
+            list: A list of contours in the frame
+        '''
+        _, bi = cv.threshold(frame, 50, 255, 0)
+        contours, _ = cv.findContours(bi, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
+        return contours
+    
+    def __get_contour_center(self, contour):
+        # for each contour get the center
+        centers = []
+        for c in contour:
+            M = cv.moments(c)
+            if M["m00"] == 0:
+                continue
+            cX = int(M["m10"] / M["m00"])
+            cY = int(M["m01"] / M["m00"])
+            centers.append((cX, cY))
+        return centers
         
     def __get_heatmap_center(self, screen: np.array, heatmap: np.array) -> tuple:
 
@@ -88,7 +113,8 @@ class SalientValidator:
         for frame_count, frames in enumerate(zip(self.screen_record, self.salience_record)):
             screen_f, sal_f = frames
 
-            attention_points = self.__get_brighter_pixel(sal_f)
+
+            attention_points = self.__get_contour_center(self.__get_contours(sal_f))#self.__get_brighter_pixel(sal_f) #
 
             dist, _ = self.__is_eye_close(screen_f, frame_count, attention_points)
             if dist > 0:

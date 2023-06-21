@@ -25,12 +25,12 @@ def load_videos(path: str) -> tuple:
 total_dists = []
 
 # for case in data file dir append the results to total_dists
-for case in os.listdir('data/Video'):
+for case in os.listdir('data/demo'):
     if case == '.DS_Store':
         continue
 
     print(f' validating {case}')
-    screen_frames, hm_frames, sal_frames = load_videos(f'data/Video/{case}')
+    screen_frames, hm_frames, sal_frames = load_videos(f'data/demo/{case}')
     sv = SalientValidator(screen_frames, hm_frames, sal_frames)
     dists = sv.validate_salience()
     total_dists.extend(dists)
