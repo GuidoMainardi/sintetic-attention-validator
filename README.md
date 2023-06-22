@@ -31,7 +31,6 @@ Anwers distribution
 |---------------------|---------|--------|-----------|----------|
 |Number of pudus      |4        |yes     |51%        |69%       |
 |Bear action          |5        |yes     |74%        |91%       |
-|Day or night         |-        |-       |100%       |100%      |
 |sun on sky           |0        |no      |29%        |56%       |
 |Trail material       |0        |no      |74%        |82%       |
 |Dominant tree species|2        |no      |33%        |26%       |
