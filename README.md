@@ -4,13 +4,13 @@
 
 ## How is the salience model compared with the human eye track data
 
-- RMSE active closer attention centre 184.79
-- RMSE active closer brighter pixel 356.58
-- RMSE active screen center 272.91
+- RMSE active closer attention centre 184.79 MAE: 152.04
+- RMSE active closer brighter pixel 356.58 MAE: 290.55
+- RMSE active screen center 272.91 MAE: 241.80
 
-- RMSE Passive closer attention center 196.56
-- RMSE Passive closer brighter pixel 455.13
-- RMSE Passive screen center 438.20
+- RMSE Passive closer attention center 207.19 MAE: 157.37
+- RMSE Passive closer brighter pixel 455.13 MAE: 396.71
+- RMSE Passive screen center 438.20 MAE: 384.62
 
 # Q2
 

@@ -31,12 +31,14 @@ class HeatmapCenterExtractor():
         pass
     
     def get_salience_center(self, image):
-        contours = self.__get_image_contours(image)
-        if len(contours):
-            return contours[0].center
+        return self.get_salience_contour(image).center
     
 
-    
+    def get_salience_contour(self, image):
+        contours = self.__get_image_contours(image)
+        if len(contours):
+            return contours[0]
+        
     def __get_image_contours(self, binary_image: cv2.Mat):
         # Apply HoughCircles transform to detect circles
         contours, _ = cv2.findContours(binary_image,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)

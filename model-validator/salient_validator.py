@@ -73,7 +73,52 @@ class SalientValidator:
             return det
         return None
     
+    def __get_heatmap_mask(self, screen: np.array, heatmap: np.array):
+
+        diff = cv.absdiff(cv.cvtColor(screen, cv.COLOR_BGR2GRAY),
+                        cv.cvtColor(heatmap, cv.COLOR_BGR2GRAY))
+        
+        _, bi = cv.threshold(diff,30,255,0)
+
+        contour = self.heatmap_extractor.get_salience_contour(bi)
+
+        #create a mask of 0 with the area indise the contour as 1
+        mask = np.zeros(screen.shape[:2], dtype=np.uint8)
+        cv.drawContours(mask, [contour], -1, 1, -1)
+        return mask
+
+    def __get_pixels_with_value(self, image: np.array, value: int) -> int:
+        return np.count_nonzero(image == value)
     
+    def __get_area_inside_heatmap(self, image: np.array, mask: np.array) -> np.array:
+
+        # filter the salience area inside the heatmap mask
+        salience = cv.bitwise_and(salience, salience, mask=mask)
+
+        return salience
+    
+    def __get_gaze_sal_comparison(self, screen: np.array, salience: np.array, heatmap: np.array) -> float:
+        '''
+        Get the percentage of salience area inside the heatmap
+
+        Parameters:
+            screen (np.array): screen frame
+            salience (np.array): salience frame
+            heatmap (np.array): heatmap frame
+
+        Returns:
+            float: avrage salience pixel brightness inside the heatmap detection area
+        '''
+        heatmap_mask = self.__get_heatmap_mask(screen, heatmap)
+        mask_size = self.__get_pixels_with_value(heatmap_mask, 1)
+
+        sal_area = self.__get_area_inside_heatmap(salience, heatmap_mask)
+        
+        # sum all pixels inside the sal area
+        sal_sum = np.sum(sal_area)
+
+        return sal_sum / mask_size
+
     def __merge_frames(self, screen: np.ndarray, salience: np.ndarray) -> np.ndarray:
         '''
         Merge screen and salience frames
@@ -108,17 +153,24 @@ class SalientValidator:
     def validate_salience(self):
         
         dists = []
-
+        height, width, _ = self.screen_record[0].shape
+        center = (width//2, height//2)
 
         for frame_count, frames in enumerate(zip(self.screen_record, self.salience_record)):
             screen_f, sal_f = frames
+            heatmap_f = self.heatmap_record[frame_count]
 
-
-            attention_points = self.__get_contour_center(self.__get_contours(sal_f))#self.__get_brighter_pixel(sal_f) #
-
-            dist, _ = self.__is_eye_close(screen_f, frame_count, attention_points)
-            if dist > 0:
+            dists.append(self.__get_gaze_sal_comparison(screen_f, sal_f, heatmap_f))
+            #attention_points = self.__get_brighter_pixel(sal_f) #self.__get_contour_center(self.__get_contours(sal_f))#
+            
+            
+            hm_center = self.__get_heatmap_center(screen_f, self.heatmap_record[frame_count])
+            if hm_center is not None:
+                dist = abs(complex(*center) - complex(*hm_center))
                 dists.append(dist)
+            # dist, _ = self.__is_eye_close(screen_f, frame_count, attention_points)
+            # if dist > 0:
+            #     dists.append(dist)
 
 
         return dists
@@ -127,13 +179,14 @@ class SalientValidator:
     def create_visualization(self):
 
         height, width, _ = self.screen_record[0].shape
-        video = cv.VideoWriter('output.mp4', cv.VideoWriter_fourcc(*'mp4v'), 10, (width,height))
+        video = cv.VideoWriter('output.mp4', cv.VideoWriter_fourcc(*'mp4v'), 5, (width,height))
 
         for frame_count, frame in enumerate(zip(self.screen_record, self.salience_record)):
             
             screen_f, sal_f = frame
             video_frame = self.__merge_frames(screen_f, sal_f)
             
+            #attention_points = self.__get_contour_center(self.__get_contours(sal_f))
             attention_points = self.__get_brighter_pixel(sal_f)
 
             _, det = self.__is_eye_close(screen_f, frame_count, attention_points)
@@ -142,7 +195,7 @@ class SalientValidator:
                 cv.circle(video_frame, det[::-1], 10, (0,0,255), -1)
 
             for point in attention_points:
-                cv.circle(video_frame, point[::-1], 5, (255,0,0), -1)
+                cv.circle(video_frame, point[::-1], 10, (255,0,0), -1)
 
             video.write(video_frame)
 
@@ -157,10 +210,12 @@ class SalientValidator:
 
             video_frame = self.__merge_frames(screen_f, sal_f)
             
+            attention_points = self.__get_contour_center(self.__get_contours(sal_f))
+
             #attention_points = self.__get_brighter_pixel(sal_f)
 
-            #for point in attention_points:
-                #cv.circle(video_frame, point[::-1], 5, (255,0,0), -1)
+            for point in attention_points:
+                cv.circle(video_frame, point[::-1], 5, (255,0,0), -1)
 
             self.countour_ploter.draw_avg_values(sal_f, video_frame)
 

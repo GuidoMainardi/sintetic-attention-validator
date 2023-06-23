@@ -6,6 +6,9 @@ import math
 def mrse(dists: list):
     return math.sqrt(sum(map(lambda x: x**2, dists)) / len(dists))
 
+def mae(dists: list):
+    return sum(dists) / len(dists)
+
 def load_videos(path: str) -> tuple:
 
     screen_frames = [f'{path}/screen/{frame}' 
@@ -25,15 +28,18 @@ def load_videos(path: str) -> tuple:
 total_dists = []
 
 # for case in data file dir append the results to total_dists
-for case in os.listdir('data/demo'):
+path = 'data/Video'
+for case in os.listdir(path):
     if case == '.DS_Store':
         continue
 
     print(f' validating {case}')
-    screen_frames, hm_frames, sal_frames = load_videos(f'data/demo/{case}')
+    screen_frames, hm_frames, sal_frames = load_videos(f'{path}/{case}')
     sv = SalientValidator(screen_frames, hm_frames, sal_frames)
     dists = sv.validate_salience()
     total_dists.extend(dists)
     print(f'Parcial MRSE: {mrse(total_dists)}')
+    print(f'Parcial MAE: {mae(total_dists)}')
 
 print(f'Total MRSE: {mrse(total_dists)}')
+print(f'Total MAE: {mae(total_dists)}')
