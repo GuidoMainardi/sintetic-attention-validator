@@ -28,7 +28,7 @@ def load_videos(path: str) -> tuple:
 total_dists = []
 
 # for case in data file dir append the results to total_dists
-path = 'data/Video'
+path = 'data/demo'
 for case in os.listdir(path):
     if case == '.DS_Store':
         continue
@@ -38,8 +38,11 @@ for case in os.listdir(path):
     sv = SalientValidator(screen_frames, hm_frames, sal_frames)
     dists = sv.validate_salience()
     total_dists.extend(dists)
-    print(f'Parcial MRSE: {mrse(total_dists)}')
-    print(f'Parcial MAE: {mae(total_dists)}')
+    print(f'avg pixel brigthness: {sum(total_dists) / len(total_dists)}')
+    print(f'complete miss rate: {len([d for d in dists if d == 0]) / len(dists)}')
 
-print(f'Total MRSE: {mrse(total_dists)}')
-print(f'Total MAE: {mae(total_dists)}')
+#     print(f'Parcial MRSE: {mrse(total_dists)}')
+#     print(f'Parcial MAE: {mae(total_dists)}')
+
+# print(f'Total MRSE: {mrse(total_dists)}')
+# print(f'Total MAE: {mae(total_dists)}')

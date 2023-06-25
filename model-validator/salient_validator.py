@@ -67,7 +67,7 @@ class SalientValidator:
         dif = cv.absdiff(cv.cvtColor(screen, cv.COLOR_BGR2GRAY),
                         cv.cvtColor(heatmap, cv.COLOR_BGR2GRAY))
 
-        _, bi = cv.threshold(dif,30,255,0)
+        _, bi = cv.threshold(dif,15,255,0)
 
         if det := self.heatmap_extractor.get_salience_center(bi):
             return det
@@ -78,13 +78,16 @@ class SalientValidator:
         diff = cv.absdiff(cv.cvtColor(screen, cv.COLOR_BGR2GRAY),
                         cv.cvtColor(heatmap, cv.COLOR_BGR2GRAY))
         
-        _, bi = cv.threshold(diff,30,255,0)
+        _, bi = cv.threshold(diff,15,255,0)
 
         contour = self.heatmap_extractor.get_salience_contour(bi)
-
+        if contour is not None:
+            contour = contour.contour
+        else:
+            return None
         #create a mask of 0 with the area indise the contour as 1
         mask = np.zeros(screen.shape[:2], dtype=np.uint8)
-        cv.drawContours(mask, [contour], -1, 1, -1)
+        cv.drawContours(mask, [contour], -1, color=(255, 255, 255), thickness=cv.FILLED)
         return mask
 
     def __get_pixels_with_value(self, image: np.array, value: int) -> int:
@@ -93,7 +96,7 @@ class SalientValidator:
     def __get_area_inside_heatmap(self, image: np.array, mask: np.array) -> np.array:
 
         # filter the salience area inside the heatmap mask
-        salience = cv.bitwise_and(salience, salience, mask=mask)
+        salience = cv.bitwise_and(image, image, mask=mask)
 
         return salience
     
@@ -110,7 +113,11 @@ class SalientValidator:
             float: avrage salience pixel brightness inside the heatmap detection area
         '''
         heatmap_mask = self.__get_heatmap_mask(screen, heatmap)
-        mask_size = self.__get_pixels_with_value(heatmap_mask, 1)
+
+        if heatmap_mask is None:
+            return None
+        
+        mask_size = self.__get_pixels_with_value(heatmap_mask, 255)
 
         sal_area = self.__get_area_inside_heatmap(salience, heatmap_mask)
         
@@ -160,14 +167,16 @@ class SalientValidator:
             screen_f, sal_f = frames
             heatmap_f = self.heatmap_record[frame_count]
 
-            dists.append(self.__get_gaze_sal_comparison(screen_f, sal_f, heatmap_f))
+            pixels_avg_brightness = self.__get_gaze_sal_comparison(screen_f, sal_f, heatmap_f)
+            if pixels_avg_brightness is not None:
+                dists.append(self.__get_gaze_sal_comparison(screen_f, sal_f, heatmap_f))
             #attention_points = self.__get_brighter_pixel(sal_f) #self.__get_contour_center(self.__get_contours(sal_f))#
             
             
-            hm_center = self.__get_heatmap_center(screen_f, self.heatmap_record[frame_count])
-            if hm_center is not None:
-                dist = abs(complex(*center) - complex(*hm_center))
-                dists.append(dist)
+            # hm_center = self.__get_heatmap_center(screen_f, self.heatmap_record[frame_count])
+            # if hm_center is not None:
+            #     dist = abs(complex(*center) - complex(*hm_center))
+            #     dists.append(dist)
             # dist, _ = self.__is_eye_close(screen_f, frame_count, attention_points)
             # if dist > 0:
             #     dists.append(dist)

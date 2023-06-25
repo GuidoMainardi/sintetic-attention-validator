@@ -33,6 +33,7 @@ def tick(screen):
             curr_screen_frame = mh.screen_record[curr_s_frame]
             similar_frames = mh.get_similar_images(curr_s_frame)
             hm_frame = 0
+            continue
             
         display_frames(screen, curr_screen_frame, curr_heatmap_frame)
         

@@ -37,7 +37,7 @@ class HeatmapCenterExtractor():
     def get_salience_contour(self, image):
         contours = self.__get_image_contours(image)
         if len(contours):
-            return contours[0]
+            return max(contours, key=lambda x: x.area)
         
     def __get_image_contours(self, binary_image: cv2.Mat):
         # Apply HoughCircles transform to detect circles
@@ -46,7 +46,4 @@ class HeatmapCenterExtractor():
     
     def __filter_contours(self, contours):
         return [ contour
-                for contour in map(lambda x: Detection(x), contours)
-                    if contour.aprox_vertices > 10 and \
-                        contour.area > 1000
-            ]
+                for contour in map(lambda x: Detection(x), contours)]

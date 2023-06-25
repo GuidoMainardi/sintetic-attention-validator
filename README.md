@@ -4,14 +4,19 @@
 
 ## How is the salience model compared with the human eye track data
 
+active
 - RMSE active closer attention centre 184.79 MAE: 152.04
 - RMSE active closer brighter pixel 356.58 MAE: 290.55
 - RMSE active screen center 272.91 MAE: 241.80
+- avg pixel brightness: 31.23
+- completly miss rate: 0.013
 
+passive 
 - RMSE Passive closer attention center 207.19 MAE: 157.37
 - RMSE Passive closer brighter pixel 455.13 MAE: 396.71
 - RMSE Passive screen center 438.20 MAE: 384.62
-
+- avg pixel brightness: 52.54
+- completly miss rate: 0.020
 # Q2
 
 ## Wich group had the best results?
