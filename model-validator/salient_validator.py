@@ -221,8 +221,6 @@ class SalientValidator:
 
             video_frame = self.__merge_frames(screen_f, sal_f)
 
-            if frame_count == 200:
-                cv.imwrite('salience.png', video_frame)
             
             #attention_points = self.__get_contour_center(self.__get_contours(sal_f))
 
