@@ -215,18 +215,23 @@ class SalientValidator:
         height, width, _ = self.screen_record[0].shape
         video = cv.VideoWriter('output.mp4', cv.VideoWriter_fourcc(*'mp4v'), 5, (width,height))
 
-        for screen_f, sal_f in zip(self.screen_record, self.salience_record):
+        for frame_count, frame in enumerate(zip(self.screen_record, self.salience_record)):
+            
+            screen_f, sal_f = frame
 
             video_frame = self.__merge_frames(screen_f, sal_f)
+
+            if frame_count == 200:
+                cv.imwrite('salience.png', video_frame)
             
-            attention_points = self.__get_contour_center(self.__get_contours(sal_f))
+            #attention_points = self.__get_contour_center(self.__get_contours(sal_f))
 
             #attention_points = self.__get_brighter_pixel(sal_f)
 
-            for point in attention_points:
-                cv.circle(video_frame, point[::-1], 5, (255,0,0), -1)
+            #for point in attention_points:
+            #    cv.circle(video_frame, point[::-1], 5, (255,0,0), -1)
 
-            self.countour_ploter.draw_avg_values(sal_f, video_frame)
+            #self.countour_ploter.draw_avg_values(sal_f, video_frame)
 
             video.write(video_frame)
 
