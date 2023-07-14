@@ -28,8 +28,9 @@ def load_videos(path: str) -> tuple:
 total_dists = []
 
 # for case in data file dir append the results to total_dists
-path = 'data/demo'
-for case in os.listdir(path):
+path = 'data/Video'
+acepted = 0
+for video, case in enumerate(os.listdir(path)):
     if case == '.DS_Store':
         continue
 
@@ -37,10 +38,20 @@ for case in os.listdir(path):
     screen_frames, hm_frames, sal_frames = load_videos(f'{path}/{case}')
     sv = SalientValidator(screen_frames, hm_frames, sal_frames)
     dists = sv.validate_salience()
-    total_dists.extend(dists)
-    print(f'avg pixel brigthness: {sum(total_dists) / len(total_dists)}')
-    print(f'complete miss rate: {len([d for d in dists if d == 0]) / len(dists)}')
-
+    
+    print(f'\tvideo {video} frames count: {len(dists)}')
+    print(f'\tavg pixel brighness video {video}: {sum(dists) / len(dists)}')
+    print(f'\tsalience miss rate video {video}: {len([d for d in dists if d == 0]) / len(dists)}')
+    print(f'\tsucceded detected frame rate {len(dists)/463}')
+    if len(dists)/463 > 0.8:
+        total_dists.extend(dists)
+        acepted += 1
+    print()
+print(f'cumulative frames count: {len(total_dists)}')
+print(f'cumulative avg pixel brighness: {sum(total_dists) / len(total_dists)}')
+print(f'cumulative salience miss rate: {len([d for d in total_dists if d == 0]) / len(total_dists)}')
+print(f'cumulative succeded detected frame rate {len(total_dists)/(463*acepted)}')
+print()
 #     print(f'Parcial MRSE: {mrse(total_dists)}')
 #     print(f'Parcial MAE: {mae(total_dists)}')
 

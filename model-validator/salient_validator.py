@@ -13,11 +13,12 @@ class SalientValidator:
             screen_record (list): list of path for each frame of the screen recording
             heatmap_record (list): list of path for each frame of the heatmap recording
         '''
-        print('Loading frames...')
-        self.screen_record = [cv.imread(img) for img in sorted(screen_record)]
-        self.heatmap_record = [cv.imread(img) for img in sorted(heatmap_record)]
-        self.salience_record = [cv.imread(img, cv.IMREAD_GRAYSCALE) for img in sorted(salience)]
-        print('Frames loaded')
+        #print('Loading frames...')
+        self.screen_record = [cv.imread(img) for img in sorted(screen_record, key= lambda x: int(x.split('/')[-1].split('.')[0]))]
+        self.heatmap_record = [cv.imread(img) for img in sorted(heatmap_record, key= lambda x: int(x.split('/')[-1].split('.')[0]))]
+        self.salience_record = [cv.imread(img, cv.IMREAD_GRAYSCALE) for img in sorted(salience, key= lambda x: int(x.split('/')[-1].split('.')[0]))]
+        #print('Frames loaded')
+        self.experiment = screen_record[0].split('/')[-3]
         self.heatmap_extractor = HeatmapCenterExtractor()
         self.countour_ploter = PlotContourAvg()
 
@@ -188,7 +189,7 @@ class SalientValidator:
     def create_visualization(self):
 
         height, width, _ = self.screen_record[0].shape
-        video = cv.VideoWriter('output.mp4', cv.VideoWriter_fourcc(*'mp4v'), 5, (width,height))
+        video = cv.VideoWriter(f'videos/{self.experiment}.mp4', cv.VideoWriter_fourcc(*'mp4v'), 5, (width,height))
 
         for frame_count, frame in enumerate(zip(self.screen_record, self.salience_record)):
             
@@ -213,13 +214,17 @@ class SalientValidator:
     def create_sal_visualization(self):
 
         height, width, _ = self.screen_record[0].shape
-        video = cv.VideoWriter('output.mp4', cv.VideoWriter_fourcc(*'mp4v'), 5, (width,height))
+        video = cv.VideoWriter(f'videos/{self.experiment}.mp4', cv.VideoWriter_fourcc(*'mp4v'), 5, (width,height))
 
         for frame_count, frame in enumerate(zip(self.screen_record, self.salience_record)):
             
             screen_f, sal_f = frame
 
-            video_frame = self.__merge_frames(screen_f, sal_f)
+            try:
+
+                video_frame = self.__merge_frames(screen_f, sal_f)
+            except:
+                continue
 
             
             #attention_points = self.__get_contour_center(self.__get_contours(sal_f))

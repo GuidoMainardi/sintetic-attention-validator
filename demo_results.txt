@@ -1,0 +1,34 @@
+validating E2
+        video 1 frames count: 406
+        avg pixel brighness video 1: 43.245390865512924
+        salience miss rate video 1: 0.0049261083743842365
+        succeded detected frame rate 0.8768898488120951
+
+ validating E11
+        video 2 frames count: 323
+        avg pixel brighness video 2: 33.152135534786076
+        salience miss rate video 2: 0.02786377708978328
+        succeded detected frame rate 0.6976241900647948
+
+ validating E4
+        video 3 frames count: 450
+        avg pixel brighness video 3: 12.149718318338731
+        salience miss rate video 3: 0.06666666666666667
+        succeded detected frame rate 0.9719222462203023
+
+ validating E10
+        video 4 frames count: 355
+        avg pixel brighness video 4: 20.797671923859205
+        salience miss rate video 4: 0.04225352112676056
+        succeded detected frame rate 0.7667386609071274
+
+ validating E26
+        video 5 frames count: 459
+        avg pixel brighness video 5: 31.92958383969284
+        salience miss rate video 5: 0.017429193899782137
+        succeded detected frame rate 0.9913606911447084
+
+cumulative frames count: 1993
+cumulative avg pixel brighness: 27.98394090706252
+cumulative salience miss rate: 0.032112393376818864
+cumulative succeded detected frame rate 0.8609071274298056
